@@ -9,12 +9,12 @@ import java.util.List;
 
 public class AdminDashboard extends JFrame {
     private final Admin           admin;
-    private final AdminController ctrl;
+    private final AdminController adminController;
 
-    public AdminDashboard(Admin admin) throws SQLException {
+    public AdminDashboard(Admin admin, AdminController adminController) throws SQLException {
         this.admin = admin;
-        this.ctrl  = new AdminController();
-        setTitle("Admin — " + admin.getFullName());
+        this.adminController = adminController;
+        setTitle("Admin — " + admin.getFirstName());
         setSize(1100, 720);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -27,8 +27,8 @@ public class AdminDashboard extends JFrame {
         JPanel bar = new JPanel(new BorderLayout());
         bar.setBackground(new Color(100, 10, 10));
         bar.setPreferredSize(new Dimension(1100, 48));
-        JLabel lbl = new JLabel("  🛡 Admin: " + admin.getFullName() +
-            "  |  " + admin.getUsername());
+        JLabel lbl = new JLabel("  🛡 Admin: " + admin.getFirstName() +
+            "  |  " + admin.getUserName());
         lbl.setForeground(Color.WHITE);
         lbl.setFont(new Font("Segoe UI", Font.BOLD, 13));
         JButton out = new JButton("Logout");
@@ -60,10 +60,10 @@ public class AdminDashboard extends JFrame {
 
         Runnable load = () -> {
             m.setRowCount(0);
-            for (Student s : ctrl.getAllStudents())
+            for (Student s : controller.getAllStudents())
                 m.addRow(new Object[]{s.getId(), s.getFirstName(), s.getLastName(),
                     s.getEmail(), s.getPhoneNumber(), s.getIdNumber(),
-                    s.getUsername(), s.getLevel(), s.getProgramId(), s.getDepartmentId()});
+                    s.getUserName(), s.getLevelEnum(), s.getProgramId(), s.getDepartmentId()});
         };
         load.run();
 
@@ -437,3 +437,4 @@ public class AdminDashboard extends JFrame {
     private JTextField tf()     { return new JTextField(14); }
     private JTextField tf(int w){ return new JTextField(w); }
     private void msg(String t){ JOptionPane.showMessageDialog(this,
+    

@@ -21,8 +21,8 @@ public class AdminDao {
             statement.setLastName(2,admin.getLastName());
             statement.setString(3,admin.getEmail());
             statement.setInt(4,admin.getPhoneNumber());
-        statement.setString(5,admin.getStaffId());
-            statement.setString(6, admin.getUsername());
+            statement.setString(5,admin.getStaffId());
+            statement.setString(6, admin.getUserName());
             statement.setString(7, admin.getPassword());
             statement.setInt(8,admin.getIdNumber());
             statement.executeUpdate();
@@ -34,9 +34,9 @@ public class AdminDao {
     // Read admin by ID
     public Admin getAdminById(int id) {
         String sql = "SELECT * FROM admins WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement= connection.prepareStatement(sql)) {
             statement.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
+            ResultSet rs = statement.executeQuery();
             if (resultSet.next()) {
                 return new Admin(
                     resultSet.getString("firstName"),
@@ -59,8 +59,8 @@ public class AdminDao {
         List<Admin> admins = new ArrayList<>();
         String sql = "SELECT * FROM admins";
         try (Statement statement = connection.createStatement();
-             ResultSet resultSet = stmt.executeQuery(sql)) {
-            while (rs.next()) {
+             ResultSet resultSet = statement.executeQuery(sql)) {
+            while (resultSet.next()) {
                 admins.add(new Admin(
                     resultSet.getString("firstName"),
                     resultSet.getString("LastName"),
@@ -85,8 +85,8 @@ public class AdminDao {
             statement.setLastName(2,admin.getLastName());
             statement.setString(3,admin.getEmail());
             statement.setInt(4,admin.getPhoneNumber());
-        statement.setString(5,admin.getStaffId());
-            statement.setString(6, admin.getUsername());
+            statement.setString(5,admin.getStaffId());
+            statement.setString(6, admin.getUserName());
             statement.setString(7, admin.getPassword());
             statement.setInt(8,admin.getIdNumber());
             statement.executeUpdate();
