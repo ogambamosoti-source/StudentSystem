@@ -6,8 +6,9 @@ public class Lecturer implements Person{
     private String lastName;
     private String email;
     private int phoneNumber;
-    private int idNumber;
+    private String idNumber;
     private String role;
+    private String userName;
     private String password;
     private String staffId;
 
@@ -16,8 +17,9 @@ public class Lecturer implements Person{
          String lastName,
          String email,
          int phoneNumber,
-          int idNumber,
+          String idNumber,
           String role,
+          String userName,
         String password,
     String staffId) {
         this.lastName = lastName;
@@ -27,10 +29,8 @@ public class Lecturer implements Person{
         this.idNumber = idNumber;
         this.password = password;
         this.role = role;
+        this.userName = userName;
         this.staffId = staffId;
-    }
-       public Lecturer(int int1, String string, String string2, String string3, int int2, String string4) {
-        //TODO Auto-generated constructor stub
     }
     // Implement Person interface methods
     @Override
@@ -47,7 +47,12 @@ public class Lecturer implements Person{
 
     @Override
     public String getRole(){ return role;}
-    @Override public int getIdNumber(){ return idNumber;}
+
+    @Override
+     public String getIdNumber(){ return idNumber;}
+     @Override 
+     public String getUserName(){ return userName;
+     }
     public String getStaffId(){ return staffId;}
     public String getPassword() { return password; }
     
@@ -64,7 +69,7 @@ public class Lecturer implements Person{
     public void setPhoneNumber(int phoneNumber) { 
         this.phoneNumber = phoneNumber; 
     }
-    public void setIdNumber(int idNumber) { 
+    public void setIdNumber(String idNumber) { 
         this.idNumber = idNumber; 
     }
     public void setPassword(String password) {

@@ -5,8 +5,9 @@ public class Librarian implements Person{
     private String lastName;
     private String email;
     private int phoneNumber;
-    private int idNumber;
+    private String idNumber;
     private String role;
+    private String userName;
     private String staffId;
     private String password;
 
@@ -14,8 +15,9 @@ public class Librarian implements Person{
         String lastName,
         String email,
         int phoneNumber,
-        int idNumber,
+        String idNumber,
         String role,
+        String userName,
     String staffId,
 String password){
 this.role = role;
@@ -24,6 +26,7 @@ this.lastName = lastName;
 this.email = email; 
 this.phoneNumber = phoneNumber;
 this.idNumber = idNumber;
+this.userName = userName;
 this.staffId = staffId;
 this.password = password;
     } 
@@ -44,8 +47,12 @@ this.password = password;
         return phoneNumber;
     }
     @Override
-public int getIdNumber(){
+      public String getIdNumber(){
     return idNumber;
+}
+@Override
+public String getUserName(){
+    return userName;
 }
 public String getStaffId(){
     return staffId;

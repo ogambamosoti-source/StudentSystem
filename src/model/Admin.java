@@ -5,17 +5,27 @@ public class Admin implements Person{
     private String lastName;
     private String email;
     private int phoneNumber;
-    private int idNumber; 
+    private String idNumber; 
     private String role;
+    private String userName;
 private String staffId;
 private String password;
-public Admin(String firstName,String lastName,String email,int phoneNumber,int idNumber,String role,String staffId,String password){
+public Admin(String firstName,
+    String lastName,
+    String email,
+    int phoneNumber,
+    String idNumber,
+    String role,
+    String userName,
+    String staffId,
+    String password){
    this.firstName = firstName;
    this.lastName = lastName;
    this.email = email;
    this.phoneNumber = phoneNumber;
    this.idNumber = idNumber;
    this.role = role;
+   this.userName = userName;
     this.staffId = staffId;
     this.password = password;
 }
@@ -37,12 +47,16 @@ public int getPhoneNumber(){
     return phoneNumber;
 }
 @Override
-public int getIdNumber(){
+public String getIdNumber(){
     return idNumber;
 }
 @Override 
 public String getRole(){
     return role;
+}
+@Override
+public String getUserName(){
+    return userName;
 }
 public String getStaffId(){
     return staffId;

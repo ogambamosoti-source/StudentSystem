@@ -1,10 +1,10 @@
 package model;
-public abstract class Person {
-     String getFirstName;
-     String getLastName;
-     String getEmail;
-     String getPhoneNumber;
-     String idNumber;      // national ID / reg number
-     String getRole;
-     String getUsername;
+public interface Person {
+     String getFirstName();
+     String getLastName();
+     String getEmail();
+     int getPhoneNumber();
+     String getIdNumber();      // national ID / reg number
+     String getRole();
+     String getUserName();
 }

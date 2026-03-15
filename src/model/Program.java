@@ -13,11 +13,6 @@ public class Program {
         this.durationYears = durationYears;
         this.departmentId = departmentId;
     }
-
-    public Program(String string) {
-        //TODO Auto-generated constructor stub
-    }
-
     public String getProgramName() {
         return programName;
     }

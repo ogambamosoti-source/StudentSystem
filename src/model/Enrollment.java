@@ -41,8 +41,8 @@ public class Enrollment {
     @Override
     public String toString() {
         return "Enrollment{" +
-                "studentId=" + student.getStudentId() +
-                ", course=" + program.getProgramId() +
+                "studentId=" + studentId + '\'' +
+                ", programId=" + programId +'\''+
                 ", enrollmentDate=" + enrollmentDate +
                 ", status='" + status + '\'' +
                 '}';
