@@ -1,113 +1,107 @@
-package model;
+package dao;
+import model.*;
+import java.sql.*;
+import java.util.SQLExeption;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Score {
-    private String studentId;
-    private String courseId;
-    private double catMarks;   // Continuous Assessment Test marks
-    private double examMarks;  // Final exam marks
-    private double total;
-    private String grade;
-    private String semester;
-    private String addedByRole; //"Admin"or "lecturer"
 
-    // Constructor
-    public Score(String studentId,
-         String courseId,
-          double catMarks,
-           double examMarks,
-            String semester,
-        String addedByRole) {
-        this.studentId = studentId;
-        this.courseId = courseId;
-        this.catMarks = catMarks;
-        this.examMarks = examMarks;
-        this.semester = semester;
-        this.addedByRole = addedByRole;
-        calculateTotal();
-        assignGrade();
-    }
 
-    // Getters
-    public String getStudentId() {
-         return studentId;
-         }
-    public String getCourseId() {
-         return courseId; 
-        }
-    public double getCatMarks() { 
-        return catMarks;
-     }
-    public double getExamMarks() { 
-        return examMarks;
-     }
-    public double getTotal() { 
-        return total; 
-    }
-    public String getGrade() {
-         return grade;
-         }
-    public String getSemester() {
-         return semester; 
-        }
-        public String getAddedByrole(){
-            return addedByRole;
-        }
+public class ScoreDao {
+private Connection connection;
 
-    // Setters with validation
-    public void setCatMarks(double catMarks) {
-        if (catMarks < 0 || catMarks > 30) {
-            throw new IllegalArgumentException("CAT marks must be between 0 and 30.");
-        }
-        this.catMarks = catMarks;
-        calculateTotal();
-        assignGrade();
-    }
-
-    public void setExamMarks(double examMarks) {
-        if (examMarks < 0 || examMarks > 70) {
-            throw new IllegalArgumentException("Exam marks must be between 0 and 70.");
-        }
-        this.examMarks = examMarks;
-        calculateTotal();
-        assignGrade();
-    }
-
-    public void setSemester(String semester) { this.semester = semester; }
-
-    // Logic
-    private void calculateTotal() {
-        this.total = catMarks + examMarks;
-    }
-
-    private void assignGrade() {
-        if (total >= 70) {
-            grade = "A";
-        } else if (total >= 60) {
-            grade = "B";
-        } else if (total >= 50) {
-            grade = "C";
-        } else if (total >= 40) {
-            grade = "D";
-        } else {
-            grade = "F";
-        }
-    }
-    public void setAddedByRole(String addedByRole) {
-        this.addedByRole = addedByRole;
-    }
-
-    @Override
-    public String toString() {
-        return "Score{" +
-                "studentId='" + studentId + '\'' +
-                ", courseId='" + courseId + '\'' +
-                ", catMarks=" + catMarks +
-                ", examMarks=" + examMarks +
-                ", total=" + total +
-                ", grade='" + grade + '\'' +
-                ", semester='" + semester + '\'' +
-                ",addedByRole='"+addedByRole+'\''+
-                '}';
+public ScoreDao(Connection connection){
+    this.connection = connection;
+}
+public void addScore(Score score){
+    String sql = "INSERT INTO score(studentId,courseId,catMarks,examMarks,total,grade,semester)VALUEs(?,?,?,?,?,?,?)";
+    try(PreparedStatement statement = connection.prepareStatement(sql)){
+        statement.setString(1,score.getStudentId());
+          statement.setString(2,score.getCourseId());
+            statement.setString(3,score.getCatMarks());
+              statement.setString(4,score.getExamMarks());
+                statement.setString(5,score.getTotal());
+                  statement.setString(6,score.getGrade());
+                    statement.setString(7,score.getSemester());
+                    statement.executeUpdate();
+    }catch(SQLException e){
+        e.printStackTrace();
     }
 }
+    // READ (all scores)
+    public List<Score> scores() {
+        List<Score> scores = new ArrayList<>();
+        String sql = "SELECT * FROM score";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Score score = new Score(
+                    rs.getInt("studentId"),
+                    rs.getInt("courseId"),
+                    rs.getDouble("catMarks"),
+                    rs.getDouble("examMarks"),
+                    rs.getDouble("total"),
+                    rs.getString("grade"),
+                    rs.getString("semester")
+                );
+                scores.add(score);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return scores;
+    }
 
+    // READ (single score by student + course)
+    public Score getScore(int studentId, int courseId) {
+        String sql = "SELECT * FROM score WHERE studentId = ? AND courseId = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, studentId);
+            statement.setInt(2, courseId);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return new Score(
+                    rs.getInt("studentId"),
+                    rs.getInt("courseId"),
+                    rs.getDouble("catMarks"),
+                    rs.getDouble("examMarks"),
+                    rs.getDouble("total"),
+                    rs.getString("grade"),
+                    rs.getString("semester")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // UPDATE
+    public void updateScore(Score score) {
+        String sql = "UPDATE score SET catMarks = ?, examMarks = ?, total = ?, grade = ?, semester = ? WHERE studentId = ? AND courseId = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDouble(1, score.getCatMarks());
+            statement.setDouble(2, score.getExamMarks());
+            statement.setDouble(3, score.getTotal());
+            statement.setString(4, score.getGrade());
+            statement.setString(5, score.getSemester());
+            statement.setInt(6, score.getStudentId());
+            statement.setInt(7, score.getCourseId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // DELETE
+    public void deleteScore(int studentId, int courseId) {
+        String sql = "DELETE FROM score WHERE studentId = ? AND courseId = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, studentId);
+            statement.setInt(2, courseId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
