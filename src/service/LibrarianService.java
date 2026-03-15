@@ -32,9 +32,9 @@ public class LibrarianService {
         }
     }
 
-    public Librarian getLibrarianById(int id) {
+    public Librarian getLibrarianByIdNumber(String idNumber) {
         try {
-            return librarianDao.getLibrarianById(id);
+            return librarianDao.getLibrarianByIdNumber(idNumber);
         } catch (Exception e) {
             System.out.println("Error fetching librarian: " + e.getMessage());
             return null;
@@ -63,7 +63,7 @@ public class LibrarianService {
 
     public List<Librarian> listLibrarians() {
         try {
-            return librarianDao.listLibrarians();
+            return librarianDao.getAllLibrarians();
         } catch (Exception e) {
             System.out.println("Error listing librarians: " + e.getMessage());
             return null;

@@ -26,9 +26,9 @@ public class StudentService {
         }
     }
 
-    public Student getStudentById(int id) {
+    public Student getStudentByIdNumber(String idNumber) {
         try {
-            return studentDao.getStudentById(id);
+            return studentDao.getStudentByIdNumber(idNumber);
         } catch (Exception e) {
             System.out.println("Error fetching student: " + e.getMessage());
             return null;
@@ -57,7 +57,7 @@ public class StudentService {
 
     public List<Student> listStudents() {
         try {
-            return studentDao.listStudents();
+            return studentDao.getAllStudents();
         } catch (Exception e) {
             System.out.println("Error listing students: " + e.getMessage());
             return null;
@@ -86,7 +86,7 @@ public class StudentService {
     // Program operations (for students)
     public List<Program> listPrograms() {
         try {
-            return programDao.listPrograms();
+            return programDao.getAllPrograms();
         } catch (Exception e) {
             System.out.println("Error listing programs: " + e.getMessage());
             return null;

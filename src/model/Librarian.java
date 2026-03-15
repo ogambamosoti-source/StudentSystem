@@ -8,7 +8,6 @@ public class Librarian implements Person{
     private String idNumber;
     private String role;
     private String userName;
-    private String staffId;
     private String password;
 
     public Librarian(String firstName,
@@ -18,7 +17,6 @@ public class Librarian implements Person{
         String idNumber,
         String role,
         String userName,
-    String staffId,
 String password){
 this.role = role;
 this.firstName = firstName;
@@ -27,7 +25,6 @@ this.email = email;
 this.phoneNumber = phoneNumber;
 this.idNumber = idNumber;
 this.userName = userName;
-this.staffId = staffId;
 this.password = password;
     } 
     @Override
@@ -54,9 +51,6 @@ this.password = password;
 public String getUserName(){
     return userName;
 }
-public String getStaffId(){
-    return staffId;
-}
 @Override
     public String getRole(){
         return "Librarian";
@@ -77,7 +71,6 @@ public void setRole(String role){
                 ", email='" + getEmail() + '\'' +
                 ", phoneNumber='" + getPhoneNumber() + '\'' +
                 ", idNumber='" + getIdNumber() + '\'' +
-                ", staffId='" + getStaffId() + '\'' +
                 ", role='" + role + '\'' +
                 '}';
     }

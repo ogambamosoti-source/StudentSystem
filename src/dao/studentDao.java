@@ -30,7 +30,7 @@ try(PreparedStatement statement = connection.prepareStatement(sql)){
     e.printStackTrace();
 }
 }
-public Student getStudentId(int idNumber){
+public Student getStudentByIdNumber(String idNumber){
     String sql = "SELECT* FROM students WHERE idNumber = ?";
     try(PreparedStatement statement = connection.prepareStatement( sql)){
         statement.setString(1, idNumber);

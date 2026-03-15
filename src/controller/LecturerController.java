@@ -11,9 +11,9 @@ public class LecturerController {
       this.lecturerService = lecturerService;
      }
 
-    public List<CourseOffering> getAllCourses(int lecturerId)         {
+    public List<Course> getAllCourses(String lecturerIdNumber)         {
        try {
-         return lecturerService.getAllCourses(lecturerId);
+         return lecturerService.getAllCourses(lecturerIdNumber);
          } catch (SQLException e) { 
         e.printStackTrace();
          }
