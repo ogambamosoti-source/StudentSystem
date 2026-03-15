@@ -9,13 +9,13 @@ import java.util.List;
 public class StudentDao {
 private Connection connection;
 
-public StudentDao(){
+public StudentDao(Connection connection){
     this.connection = connection;
 }
 public void addStudent(Student student){
     String sql = "INSERT INTO students(idNumber,firstName,lastName,email,phoneNumber,regNumber,password,role,programId)VALUES (?,?,?,?,?,?,?,?,?)";
 try(PreparedStatement statement = connection.prepareStatement(sql)){
-    statement.setInt(1,student.getIdNumber());
+    statement.setString(1,student.getIdNumber());
     statement.setString(2,student.getFirstName());
     statement.setString(3,student.getLastName());
     statement.setString(4,student.getEmail());
@@ -23,7 +23,7 @@ try(PreparedStatement statement = connection.prepareStatement(sql)){
     statement.setString(6,student.getRegNumber());
     statement.setString(7,student.getPassword());
     statement.setString(8,student.getRole());
-    statement.setInt(9,student.getProgramId());
+    statement.setString(9,student.getProgramID());
     statement.executeUpdate();
     System.out.println("Student added successfully");
 }catch(SQLException e){
@@ -36,7 +36,7 @@ public Student getStudentId(int idNumber){
         statement.setString(1, idNumber);
         ResultSet resultSet = statement.executeQuery();
         if(resultSet.next()){
-            Program program = new Program(resultSet.getInt("programId"));
+            Program program = new Program(resultSet.getString("programID"));
             return new Student(
                 resultSet.getInt("idNumber"),
                 resultSet.getString("firstName"),
@@ -59,7 +59,7 @@ public List<Student> getAllStudents(){
     try(Statement statement = connection.createStatement()){
         ResultSet resultSet = statement.executeQuery(sql);
         while(resultSet.next()){
-            Program program = new Program(resultSet.getInt("programId"));
+            Program program = new Program(resultSet.getString("programID"));
             students.add(new Student(
                   resultSet.getInt("idNumber"),
                 resultSet.getString("firstName"),
@@ -87,8 +87,8 @@ public void updateStudent(Student student){
         statement.setString(5,student.getRegNumber());
         statement.setString(6,student.getPassword());
         statement.setString(7,student.getRole());
-        statement.setInt(8,student.getProgramId());
-        statement.setInt(9,student.getIdNumber());
+        statement.setString(8,student.getProgramID());
+        statement.setString(9,student.getIdNumber());
         statement.executeUpdate();
         System.out.println("Student updated succesfully");
     }catch(SQLException e){

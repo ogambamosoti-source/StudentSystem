@@ -1,12 +1,12 @@
 package model;
 public class Program {
     private String programName;
-    private int programID;
+    private String programID;
     private LevelEnum level; // e.g., DEGREE, DIPLOMA, etc.
     private String durationYears;
     private int departmentId;
 
-    public Program(String programName, int programID, LevelEnum level, String durationYears,int departmentId) {
+    public Program(String programName, String programID, LevelEnum level, String durationYears,int departmentId) {
         this.programName = programName;
         this.programID = programID;
         this.level = level;
@@ -17,7 +17,7 @@ public class Program {
         return programName;
     }
 
-    public int getProgramID() {
+    public String getProgramID() {
         return programID;
     }
 
