@@ -1,57 +1,96 @@
-package model;
+package dao;
+import java.sql.SQLException;
+import java.sql.*;
+import model.Semester;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class Semester{
-    private int academicYear;//e.g 1-6
-    private int semester;//e.g 1or 2
-    private String startDate;//"2026-06-04"
-    private String endDate;//"2026-05-03"
 
-    public Semester(int academicYear,int semester,String startDate,String endDate){
-        this.academicYear = academicYear;
-        this.semester = semester;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-    public int getAcademicYear(){
-        return academicYear;
-    }
-    public void setacademicYear(int academicYear){
-        if(academicYear < 1 && academicYear > 6){
-            throw new IllegalArgumentException("Academic year must be between 1 and 6");
+public class SemesterDao {
+private Connection connection;
+public SemesterDao(Connection connection){
+    this.connection = connection;
+}
+    // CREATE
+    public void addSemester(Semester semester) {
+        String sql = "INSERT INTO semester(academicYear, semester, startDate, endDate) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, semester.getAcademicYear());
+            statement.setString(2, semester.getSemester());
+            statement.setDate(3, Date.valueOf(semester.getStartDate())); // assuming LocalDate in model
+            statement.setDate(4, Date.valueOf(semester.getEndDate()));
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        this.academicYear = academicYear;
     }
-    public int getSemester(){
-        return semester;
-    }
-    public void setSemester(int semester){
-        if(semester < 1 && semester > 2){
-            throw new IllegalArgumentException("semester must be between 1 and 2");
+
+    // READ (all semesters)
+    public List<Semester> getAllSemesters() {
+        List<Semester> semesters = new ArrayList<>();
+        String sql = "SELECT * FROM semester";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Semester semester = new Semester(
+                    rs.getInt("academicYear"),
+                    rs.getString("semester"),
+                    rs.getDate("startDate").toLocalDate(),
+                    rs.getDate("endDate").toLocalDate()
+                );
+                semesters.add(semester);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        this.semester = semester;
+        return semesters;
     }
-    public String getStartDate(){
-        return startDate;
+
+    // READ (single semester by academicYear + semester)
+    public Semester getSemester(int academicYear, String semesterName) {
+        String sql = "SELECT * FROM semester WHERE academicYear = ? AND semester = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, academicYear);
+            statement.setString(2, semesterName);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return new Semester(
+                    rs.getInt("academicYear"),
+                    rs.getString("semester"),
+                    rs.getDate("startDate").toLocalDate(),
+                    rs.getDate("endDate").toLocalDate()
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
-    public void setstartDate(String startDate){
-        this.startDate = startDate;
+
+    // UPDATE
+    public void updateSemester(Semester semester) {
+        String sql = "UPDATE semester SET startDate = ?, endDate = ? WHERE academicYear = ? AND semester = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDate(1, Date.valueOf(semester.getStartDate()));
+            statement.setDate(2, Date.valueOf(semester.getEndDate()));
+            statement.setInt(3, semester.getAcademicYear());
+            statement.setString(4, semester.getSemester());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-    public String getEndDate(){
-        return endDate;
-    }
-    public void  setEndDate(String endDate){
-        this.endDate = endDate;
-    }
-    @Override
-    public String toString(){
-        return"Semester{"+
-        "academicYear='"+ academicYear + '\''+
-        ",semester='"+ semester +'\''+
-        ",startDate='"+ startDate +'\'' +
-        ",endDate='"+ endDate + '\''+
-        '}';
+
+    // DELETE
+    public void deleteSemester(int academicYear, String semesterName) {
+        String sql = "DELETE FROM semester WHERE academicYear = ? AND semester = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, academicYear);
+            statement.setString(2, semesterName);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
-
-
