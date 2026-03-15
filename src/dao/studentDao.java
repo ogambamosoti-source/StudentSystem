@@ -1,123 +1,109 @@
-package model;
+package dao;
 
+import model.Program;
+import model.Student;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+public class StudentDao {
+private Connection connection;
 
-public class Student implements Person {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private int phoneNumber;
-    private int idNumber;
-    private String regNumber;
-    private String password;
-    private String role;
-    private String userName;
-    private Program program;//one to many:one program
-    private List<Course> courses;//many to many: multiple courses to multiple students
-    private Map<String,String> courseGrades;
-
-    public Student(int phoneNumber,
-                   String lastName,
-                    String email,
-                     String firstname,
-                     int idNumber,
-                      String password,
-                      String role,
-                      String userName,
-                       String regNumber,
-                       Program program) {
-                        this.userName = userName;
-       this.firstName = firstname;
-       this.lastName = lastName;
-       this.email = email;
-       this.phoneNumber = phoneNumber;
-       this.idNumber = idNumber;
-       this.role = role;
-       this.regNumber = regNumber;
-       this.password = password;
-       this.program = program;
-this.courses = new ArrayList<>();
-        this.courseGrades = new HashMap<>();
+public StudentDao(){
+    this.connection = connection;
+}
+public void addStudent(Student student){
+    String sql = "INSERT INTO students(idNumber,firstName,lastName,email,phoneNumber,regNumber,password,role,programId)VALUES (?,?,?,?,?,?,?,?,?)";
+try(PreparedStatement statement = connection.prepareStatement(sql)){
+    statement.setInt(1,student.getIdNumber());
+    statement.setString(2,student.getFirstName());
+    statement.setString(3,student.getLastName());
+    statement.setString(4,student.getEmail());
+    statement.setInt(5,student.getPhoneNumber());
+    statement.setString(6,student.getRegNumber());
+    statement.setString(7,student.getPassword());
+    statement.setString(8,student.getRole());
+    statement.setInt(9,student.getProgramId());
+    statement.executeUpdate();
+    System.out.println("Student added successfully");
+}catch(SQLException e){
+    e.printStackTrace();
+}
+}
+public Student getStudentId(int idNumber){
+    String sql = "SELECT* FROM students WHERE idNumber = ?";
+    try(PreparedStatement statement = connection.prepareStatement( sql)){
+        statement.setString(1, idNumber);
+        ResultSet resultSet = statement.executeQuery();
+        if(resultSet.next()){
+            Program program = new Program(resultSet.getInt("programId"));
+            return new Student(
+                resultSet.getInt("idNumber"),
+                resultSet.getString("firstName"),
+                resultSet.getString("lastName"),
+                resultSet.getString("email"),
+                resultSet.getInt("phoneNumber"),
+            resultSet.getString("regNumber"),
+        resultSet.getString("password"),
+    resultSet.getString("role"),
+program);
+        }
+    }catch(SQLException e){
+        e.printStackTrace();
     }
-    // GettersdNumber;
-
-
-    // Implement Person interface
-    @Override public String getFirstName() { return firstName; }
-    @Override public String getLastName() { return lastName; }
-    @Override public String getEmail() { return email; }
-    @Override public int getPhoneNumber() { return phoneNumber; }
-    @Override public String getUserName(){  return userName;}
-    @Override public int getIdNumber(){ return idNumber;}
- public String getRegNumber() { return regNumber; }
-    @Override public String getRole(){ return "Student";}
-    public String getPassword() { 
-        return password;
-     } 
-    
-    public Program getProgram(){
-        return program;
+    return null;
+}
+public List<Student> getAllStudents(){
+    List<Student> students = new ArrayList<>();
+    String sql = "SELECT * FROM students";
+    try(Statement statement = connection.createStatement()){
+        ResultSet resultSet = statement.executeQuery(sql);
+        while(resultSet.next()){
+            Program program = new Program(resultSet.getInt("programId"));
+            students.add(new Student(
+                  resultSet.getInt("idNumber"),
+                resultSet.getString("firstName"),
+                resultSet.getString("lastName"),
+                resultSet.getString("email"),
+                resultSet.getInt("phoneNumber"),
+                resultSet.getString("regnumber"),
+                resultSet.getString("password"),
+                resultSet.getString("role"),
+                program)
+         );
+        }
+    }catch(SQLException e){
+        e.printStackTrace();
     }
-    public void setProgram(Program program){
-        this.program = program;
-    }
-    public List<Course> getCourses(){
-        return courses;
-    }
-    public Map<String,String> getCourseGrades() {
-        return courseGrades;
-    }
-
-    // Setters
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setPassWord(String password) {
-        this.password = password;
-    }
-    public void setUserName(String userName){
-        this.userName = userName;
-    }
-
-    public void setRegNumber(String regNumber) {
-        this.regNumber = regNumber;
-    }
-public void enrollInCourse(Course course){
-    if(!courses.contains(course)){
-        courses.add(course);
+    return students;
+}
+public void updateStudent(Student student){
+    String sql = "UPDATE students SET firstname=?,lastName=?,email=?,phoneNumber=?,regNumber=?,password=?,role=?,program=?WHERE IdNumber=?";
+    try(PreparedStatement statement = connection.prepareStatement(sql)){
+        statement.setString(1,student.getFirstName());
+        statement.setString(2,student.getLastName());
+        statement.setString(3,student.getEmail());
+        statement.setInt(4,student.getPhoneNumber());
+        statement.setString(5,student.getRegNumber());
+        statement.setString(6,student.getPassword());
+        statement.setString(7,student.getRole());
+        statement.setInt(8,student.getProgramId());
+        statement.setInt(9,student.getIdNumber());
+        statement.executeUpdate();
+        System.out.println("Student updated succesfully");
+    }catch(SQLException e){
+        e.printStackTrace();
     }
 }
-    public void assignGrade(String courseCode,String courseGrade) {
-        courseGrades.put(courseCode,"A");
+public void deleteStudent(int idNumber){
+    String sql = "DELETE FROM students WHERE idNumber =?";
+    try(PreparedStatement statement = connection.prepareStatement(sql)){
+        statement.setInt(1,idNumber);
+        statement.executeUpdate();
+        System.out.println("Student deleted successfully");
+    }catch(SQLException e){
+        e.printStackTrace();
     }
-@Override
-public String toString() {
-    return "Student{" +
-            "firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", email='" + email + '\'' +
-            ", phoneNumber='" + phoneNumber + '\'' +
-            ", regNumber='" + regNumber + '\'' +
-            ",userName='"+userName + '\''+
-            ",role='"+ role + '\''+
-            ",program='"+ program + '\''+
-            ", courseGrades='" + courseGrades + '\'' +
-            
-            '}';
+
+}
+}
