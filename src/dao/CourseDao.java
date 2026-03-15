@@ -1,6 +1,5 @@
 package dao;
 import model.*;//course objects
-
 import java.sql.Connection;//store a connection
 import java.sql.PreparedStatement;//
 import java.sql.SQLException;
