@@ -5,16 +5,60 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class LecturerController {
-    private final LecturerService svc;
+    private final LecturerService lecturerService;
 
-    public LecturerController() throws SQLException { svc = new LecturerService(); }
+    public LecturerController(LecturerService lecturerService) { 
+      this.lecturerService = lecturerService;
+     }
 
-    public List<CourseOffering> getMyCourses(int lecturerId)         { try { return svc.getMyCourses(lecturerId); } catch (SQLException e) { return list(); } }
-    public List<Enrollment>     getStudentsIn(int offeringId)        { try { return svc.getStudentsInOffering(offeringId); } catch (SQLException e) { return list(); } }
-    public List<Score>          getScores(int offeringId)            { try { return svc.getScoresForOffering(offeringId); } catch (SQLException e) { return list(); } }
-    public List<Book>           getAvailableBooks()                  { try { return svc.getAvailableBooks(); } catch (SQLException e) { return list(); } }
-    public boolean              borrowBook(int bookId, int lecId)    { try { return svc.borrowBook(bookId, lecId); } catch (SQLException e) { return false; } }
+    public List<CourseOffering> getAllCourses(int lecturerId)         {
+       try {
+         return lecturerService.getAllCourses(lecturerId);
+         } catch (SQLException e) { 
+        e.printStackTrace();
+         }
+         }
+    public List<Enrollment>  getStudentsIn(int offeringId)        {
+       try {
+         return lecturerService.getStudentsInOffering(offeringId);
+         } catch (SQLException e) {
+           e.printStackTrace();
+          }
+         }
+    public List<Score> getScores(int offeringId)            {
+       try {
+         return lecturerService.getScoresForOffering(offeringId);
+         } catch (SQLException e) { return list();
+          }
+         }
+    public List<Book>  getAvailableBooks()                  {
+       try {
+         return lecturerService.getAvailableBooks();
+         } catch (SQLException e) {
+         e.printStackTrace();
+         }
+         }
+    public boolean  borrowBook(int bookId, String lecturerIdNumber)    {
+       try { 
+        return lecturerService.borrowBook(bookId, lecturerIdNumber);
+       } catch (SQLException e) {
+         e.printStackTrace();
+         } 
+        }
+        public boolean returnBook(int BookId, String lecturerIdNumber){
+          try{
+            return lecturerService.returnBook(lecturerIdNumber, BookId);
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+        }
+            public List<Book> getBorrowedBooks(int lecturerIdNumber) {
+        try {
+            return lecturerService.getBorrowedBooks(lecturerIdNumber);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+}
 
-    @SuppressWarnings("unchecked")
-    private <T> List<T> list() { return new ArrayList<>(); }
-      }

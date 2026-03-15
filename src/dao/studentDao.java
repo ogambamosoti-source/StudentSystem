@@ -13,7 +13,7 @@ public StudentDao(Connection connection){
     this.connection = connection;
 }
 public void addStudent(Student student){
-    String sql = "INSERT INTO students(idNumber,firstName,lastName,email,phoneNumber,regNumber,password,role,programId)VALUES (?,?,?,?,?,?,?,?,?)";
+    String sql = "INSERT INTO students(idNumber,firstName,lastName,email,phoneNumber,regNumber,password,role,programID)VALUES (?,?,?,?,?,?,?,?,?)";
 try(PreparedStatement statement = connection.prepareStatement(sql)){
     statement.setString(1,student.getIdNumber());
     statement.setString(2,student.getFirstName());

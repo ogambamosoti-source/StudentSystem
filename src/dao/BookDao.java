@@ -13,12 +13,13 @@ public class BookDao {
         this.connection = connection;
     }
 public void AddBook(Book book){
-    String sql = "INSERT INTO books (title,author,isbn,yearPublished)";
+    String sql = "INSERT INTO books (title,author,isbn,yearPublished,description)VALUES(?,?,?,?,?)";
     try(PreparedStatement statement = connection.prepareStatement(sql)){
-        statement.setString(1,book.getTitle);
-        statement.setString(2,book.getAuthor);
-        statement.setString(3,book.getIsbn);
-        statement.setInt(4,book.getyearPublished);
+        statement.setString(1,book.getTitle());
+        statement.setString(2,book.getAuthor());
+        statement.setString(3,book.getIsbn());
+        statement.setInt(4,book.getYearPublished());
+        statement.setString(5,book.getDescription());
         statement.executeUpdate();
   
   }catch(SQLException e){
@@ -32,9 +33,11 @@ public void getBookByTitle(String title){
         ResultSet resultSet = statement.executeQuery();
         if(resultSet.next()){
             return new Book(
-resultSet.getString("isbn"),
-resultSet.getString("author"),
-resultSet.getInt("yearPublished")
+                resultSet.getString("title"),
+                resultSet.getString("author"),
+                resultSet.getString("isbn"),
+                resultSet.getInt("yearPublished"),
+                resultSet.getString("description")
             );
         }
     }catch(SQLException e){
@@ -47,11 +50,12 @@ public List<Book> getAllBooks(){
     try(PreparedStatement statement = connection.prepareStatement(sql)){
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
-            books.add(new book(
+            books.add(new Book(
                 resultSet.getString("title"),
                 resultSet.getString("author"),
                 resultSet.getString("isbn"),
-                resultSet.getInt("YearPublished")
+                resultSet.getInt("yearPublished"),
+                resultSet.getString("description")
             ));
         }
     }catch(SQLException e){
@@ -60,12 +64,13 @@ public List<Book> getAllBooks(){
     return books;
 }
 public void updateBooks(Book book){
-    String sql ="UPDATE books SET title=?,isbn=?,author=?,yearPublished=?";
+    String sql ="UPDATE books SET title=?,isbn=?,author=?,yearPublished=?,description=?";
     try(PreparedStatement statement = connection.prepareStatement(sql)){
         statement.setString("1,book.getTitle");
         statement.setString("2,book.getAuthor");
         statement.setString("3,book.getIsbn");
         statement.setInt("4,book.getYearPublished");
+        statement.setString("5,book.getDescription");
         statement.executeQuery();
     }catch(SQLException e){
         e.printStackTrace();
